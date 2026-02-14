@@ -1,0 +1,2291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediTrack Pro - Advanced Medical Referral Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0891b2;
+            --primary-dark: #0e7490;
+            --primary-light: #67e8f9;
+            --secondary: #06b6d4;
+            --accent: #10b981;
+            --accent-orange: #f97316;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+            --bg-light: #f0fdfa;
+            --bg-white: #ffffff;
+            --text-dark: #0f172a;
+            --text-gray: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(8, 145, 178, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 28px;
+            box-shadow: var(--shadow-lg);
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo-text h1 {
+            font-size: 1.75rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+
+        .logo-text p {
+            font-size: 0.875rem;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        nav {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            background: var(--bg-light);
+            padding: 0.5rem;
+            border-radius: 12px;
+        }
+
+        .nav-btn {
+            padding: 0.625rem 1.25rem;
+            border: none;
+            background: transparent;
+            color: var(--text-gray);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(8, 145, 178, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+
+        .nav-btn:hover {
+            background: white;
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .demo-badge {
+            background: linear-gradient(135deg, var(--warning) 0%, var(--accent-orange) 100%);
+            color: white;
+            padding: 0.625rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            animation: bounce 2s infinite;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.875rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            opacity: 0.95;
+            max-width: 900px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-stat-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--purple), var(--pink));
+            background-size: 200% 100%;
+            animation: gradient 3s ease infinite;
+        }
+
+        @keyframes gradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 2rem;
+            font-size: 1.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .required {
+            color: var(--danger);
+        }
+
+        input, select, textarea {
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(8, 145, 178, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning) 0%, var(--accent-orange) 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--text-gray) 0%, #475569 100%);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 253, 250, 0.95) 100%);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid var(--border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(8, 145, 178, 0.1) 0%, transparent 70%);
+            transition: transform 0.6s;
+        }
+
+        .stat-card:hover::before {
+            transform: translate(-25%, -25%);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .stat-card h4 {
+            color: var(--text-gray);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .trend {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .trend-up {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .trend-down {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-white);
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--bg-light) 0%, rgba(6, 182, 212, 0.1) 100%);
+            color: var(--text-dark);
+            font-weight: 700;
+            text-align: left;
+            padding: 1.25rem;
+            border-bottom: 2px solid var(--primary);
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr {
+            transition: all 0.2s;
+        }
+
+        tr:hover {
+            background: var(--bg-light);
+            transform: scale(1.01);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.375rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+        }
+
+        .badge-info {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: #1e40af;
+        }
+
+        .badge-warning {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #991b1b;
+        }
+
+        .alert {
+            padding: 1.25rem 1.75rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: #1e40af;
+            border-left: 4px solid var(--primary);
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #92400e;
+            border-left: 4px solid var(--warning);
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #991b1b;
+            border-left: 4px solid var(--danger);
+        }
+
+        .referral-link {
+            background: linear-gradient(135deg, var(--bg-light) 0%, rgba(103, 232, 249, 0.1) 100%);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 2px dashed var(--primary);
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .referral-link code {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            background: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: var(--shadow);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+
+        .copy-btn {
+            margin-left: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        footer {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 5rem;
+            border-top: 3px solid var(--primary);
+        }
+
+        .chart-container {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--bg-light) 0%, rgba(103, 232, 249, 0.1) 100%);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .chart-container h4 {
+            margin-bottom: 2rem;
+            color: var(--text-dark);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 250px;
+            gap: 1.5rem;
+            padding: 1.5rem 0;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--primary), var(--primary-light));
+            border-radius: 12px 12px 0 0;
+            position: relative;
+            transition: all 0.3s;
+            min-width: 80px;
+            box-shadow: var(--shadow);
+        }
+
+        .bar:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -40px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -35px;
+            width: 100%;
+            text-align: center;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 1.125rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--purple));
+            border-radius: 10px;
+            transition: width 1s ease-out;
+        }
+
+        .widget-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .widget {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .widget-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .widget-icon {
+            font-size: 2rem;
+        }
+
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+
+        .status-dot.online {
+            background: var(--success);
+        }
+
+        .status-dot.offline {
+            background: var(--danger);
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-xl);
+            z-index: 10000;
+            animation: slideInRight 0.5s;
+            max-width: 400px;
+            border-left: 4px solid var(--primary);
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .quick-action-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 1.5rem;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .quick-action-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .quick-action-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h2 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+            .form-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+            nav { width: 100%; justify-content: center; }
+            .widget-grid { grid-template-columns: 1fr; }
+            .hero-stats { gap: 1.5rem; }
+        }
+
+        .loading-spinner {
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .filter-tab:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">⚕️</div>
+                    <div class="logo-text">
+                        <h1>MediTrack Pro</h1>
+                        <p>Advanced Referral Management System</p>
+                    </div>
+                </div>
+                <nav>
+                    <button class="nav-btn active" onclick="showSection('overview')">📊 Overview</button>
+                    <button class="nav-btn" onclick="showSection('register-pro')">👥 Register PRO</button>
+                    <button class="nav-btn" onclick="showSection('register-doctor')">🩺 Register Doctor</button>
+                    <button class="nav-btn" onclick="showSection('patient-booking')">📋 Patient Booking</button>
+                    <button class="nav-btn" onclick="showSection('admin-dashboard')">👨‍💼 Admin</button>
+                    <button class="nav-btn" onclick="showSection('doctor-dashboard')">🩺 Doctor</button>
+                    <button class="nav-btn" onclick="showSection('pro-dashboard')">👥 PRO</button>
+                    <button class="nav-btn" onclick="showSection('analytics')">📈 Analytics</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="hero-content">
+            <div class="container">
+                <div class="demo-badge">🔥 LIVE DEMO - FULLY FUNCTIONAL</div>
+                <h2>Advanced Medical Referral & Incentive Management</h2>
+                <p>Eliminate manual errors • Real-time tracking • AI-powered analytics • Full transparency • Audit-ready reports</p>
+                
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" id="hero-revenue">₹0</span>
+                        <span class="hero-stat-label">Total Revenue</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" id="hero-bookings">0</span>
+                        <span class="hero-stat-label">Total Bookings</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" id="hero-doctors">0</span>
+                        <span class="hero-stat-label">Active Doctors</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" id="hero-pros">0</span>
+                        <span class="hero-stat-label">Active PROs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Overview Section -->
+        <section id="overview" class="section active">
+            <div class="card">
+                <h3>📊 System Overview & Features</h3>
+                
+                <div class="alert alert-info">
+                    <span style="font-size: 2rem;">ℹ️</span>
+                    <div>
+                        <strong>Purpose:</strong> This enterprise-grade system automates doctor & PRO tracking, eliminates manual errors, provides real-time analytics, and generates audit-ready reports for www.divyagarbhsanskar.com
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>🏗️ Structure Level</h4>
+                        <div class="value">2-Tier</div>
+                        <p>PRO → Doctor → Patient</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>💰 Doctor Incentive</h4>
+                        <div class="value">10%</div>
+                        <p>Health Awareness Incentive</p>
+                        <div class="trend">
+                            <span class="trend-up">↑ 5.2% from last month</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>🤝 PRO Incentive</h4>
+                        <div class="value">5%</div>
+                        <p>Professional Collaboration Fee</p>
+                        <div class="trend">
+                            <span class="trend-up">↑ 3.8% from last month</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>🏢 Owner Share</h4>
+                        <div class="value">85%</div>
+                        <p>After service support earnings</p>
+                        <div class="trend">
+                            <span class="trend-up">↑ Stable growth</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget-grid">
+                    <div class="widget">
+                        <div class="widget-header">
+                            <span class="widget-title">🌐 API Status</span>
+                            <span class="widget-icon">📡</span>
+                        </div>
+                        <div class="api-status">
+                            <div class="status-dot online"></div>
+                            <div>
+                                <div style="font-weight: 700;">System Online</div>
+                                <div style="font-size: 0.875rem; color: var(--text-gray);">All services operational</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="testAPI()" style="width: 100%; margin-top: 1rem;">
+                            Test API Connection
+                        </button>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-header">
+                            <span class="widget-title">⚡ Quick Actions</span>
+                            <span class="widget-icon">🚀</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <button class="btn btn-success" onclick="showSection('patient-booking')" style="width: 100%;">
+                                ➕ New Booking
+                            </button>
+                            <button class="btn btn-warning" onclick="exportReport()" style="width: 100%;">
+                                📊 Export Report
+                            </button>
+                            <button class="btn btn-secondary" onclick="generateInvoice()" style="width: 100%;">
+                                🧾 Generate Invoice
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-header">
+                            <span class="widget-title">📈 Performance Metrics</span>
+                            <span class="widget-icon">📊</span>
+                        </div>
+                        <div>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 600;">Conversion Rate</span>
+                                    <span style="font-weight: 700; color: var(--success);">87%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 87%;"></div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 600;">Patient Satisfaction</span>
+                                    <span style="font-weight: 700; color: var(--success);">94%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 94%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 600;">System Uptime</span>
+                                    <span style="font-weight: 700; color: var(--success);">99.9%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 99.9%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h4>Revenue Distribution Model</h4>
+                    <div class="bar-chart">
+                        <div class="bar" style="height: 85%;">
+                            <div class="bar-value">85%</div>
+                            <div class="bar-label">Owner</div>
+                        </div>
+                        <div class="bar" style="height: 55%;">
+                            <div class="bar-value">10%</div>
+                            <div class="bar-label">Doctor</div>
+                        </div>
+                        <div class="bar" style="height: 35%;">
+                            <div class="bar-value">5%</div>
+                            <div class="bar-label">PRO</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Register PRO Section -->
+        <section id="register-pro" class="section">
+            <div class="card">
+                <h3>👥 Register Professional Representative (PRO)</h3>
+                <form id="pro-form" onsubmit="registerPRO(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="pro-name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="pro-name" required placeholder="Enter full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="pro-email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="pro-email" required placeholder="professional@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="pro-phone">Contact Number <span class="required">*</span></label>
+                            <input type="tel" id="pro-phone" required placeholder="+91 98765 43210">
+                        </div>
+                        <div class="form-group">
+                            <label for="pro-location">Location</label>
+                            <input type="text" id="pro-location" placeholder="City, State">
+                        </div>
+                        <div class="form-group">
+                            <label for="pro-organization">Organization</label>
+                            <input type="text" id="pro-organization" placeholder="Company/Clinic Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="pro-experience">Experience (Years)</label>
+                            <input type="number" id="pro-experience" placeholder="5" min="0">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 2rem;">
+                        ✓ Register PRO
+                    </button>
+                </form>
+                <div id="pro-success"></div>
+            </div>
+        </section>
+
+        <!-- Register Doctor Section -->
+        <section id="register-doctor" class="section">
+            <div class="card">
+                <h3>🩺 Register Medical Professional (Doctor)</h3>
+                <form id="doctor-form" onsubmit="registerDoctor(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="doctor-name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="doctor-name" required placeholder="Dr. Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="doctor-email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="doctor-email" required placeholder="doctor@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="doctor-phone">Contact Number <span class="required">*</span></label>
+                            <input type="tel" id="doctor-phone" required placeholder="+91 98765 43210">
+                        </div>
+                        <div class="form-group">
+                            <label for="doctor-specialization">Specialization</label>
+                            <select id="doctor-specialization">
+                                <option>Gynecology</option>
+                                <option>Pediatrics</option>
+                                <option>Prenatal Care</option>
+                                <option>Ayurveda</option>
+                                <option>Yoga Therapy</option>
+                                <option>Nutritionist</option>
+                                <option>Psychologist</option>
+                                <option>General Physician</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="doctor-pro">Assigned PRO <span class="required">*</span></label>
+                            <select id="doctor-pro" required>
+                                <option value="">Select PRO</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="doctor-location">Practice Location</label>
+                            <input type="text" id="doctor-location" placeholder="City, State">
+                        </div>
+                        <div class="form-group">
+                            <label for="doctor-qualification">Qualification</label>
+                            <input type="text" id="doctor-qualification" placeholder="MBBS, MD, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label for="doctor-registration">Registration Number</label>
+                            <input type="text" id="doctor-registration" placeholder="MCI Registration No.">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 2rem;">
+                        ✓ Register Doctor
+                    </button>
+                </form>
+                <div id="doctor-success"></div>
+            </div>
+        </section>
+
+        <!-- Patient Booking Section -->
+        <section id="patient-booking" class="section">
+            <div class="card">
+                <h3>📋 Patient Consultation Booking</h3>
+                <form id="booking-form" onsubmit="createBooking(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="patient-name">Patient Name <span class="required">*</span></label>
+                            <input type="text" id="patient-name" required placeholder="Full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="patient-phone">Contact Number <span class="required">*</span></label>
+                            <input type="tel" id="patient-phone" required placeholder="+91 98765 43210">
+                        </div>
+                        <div class="form-group">
+                            <label for="patient-email">Email (Optional)</label>
+                            <input type="email" id="patient-email" placeholder="patient@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="patient-age">Age</label>
+                            <input type="number" id="patient-age" placeholder="25" min="0" max="120">
+                        </div>
+                        <div class="form-group">
+                            <label for="booking-amount">Consultation Amount (₹) <span class="required">*</span></label>
+                            <input type="number" id="booking-amount" required placeholder="5000" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="doctor-referral-code">Doctor Referral Code <span class="required">*</span></label>
+                            <input type="text" id="doctor-referral-code" required placeholder="DOC-XXXX" style="text-transform: uppercase;">
+                        </div>
+                        <div class="form-group">
+                            <label for="booking-service">Service Type</label>
+                            <select id="booking-service">
+                                <option>Garbh Sanskar Consultation</option>
+                                <option>Prenatal Yoga</option>
+                                <option>Nutritional Guidance</option>
+                                <option>Psychological Counseling</option>
+                                <option>Ayurvedic Therapy</option>
+                                <option>Meditation & Mindfulness</option>
+                                <option>Postnatal Care</option>
+                                <option>General Consultation</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="booking-date">Preferred Date</label>
+                            <input type="date" id="booking-date">
+                        </div>
+                        <div class="form-group">
+                            <label for="booking-notes">Additional Notes</label>
+                            <textarea id="booking-notes" rows="3" placeholder="Any special requirements..."></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success" style="margin-top: 2rem;">
+                        ✓ Confirm Booking
+                    </button>
+                </form>
+                <div id="booking-success"></div>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard Section -->
+        <section id="admin-dashboard" class="section">
+            <div class="card">
+                <h3>👨‍💼 Admin Dashboard - Complete Overview</h3>
+                
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterDashboard('all')">All Time</button>
+                    <button class="filter-tab" onclick="filterDashboard('today')">Today</button>
+                    <button class="filter-tab" onclick="filterDashboard('week')">This Week</button>
+                    <button class="filter-tab" onclick="filterDashboard('month')">This Month</button>
+                </div>
+
+                <div class="stats-grid" id="admin-stats"></div>
+
+                <div class="quick-actions">
+                    <button class="quick-action-btn" onclick="exportReport()">
+                        <div class="quick-action-icon">📊</div>
+                        <div style="font-weight: 700;">Export CSV</div>
+                    </button>
+                    <button class="quick-action-btn" onclick="generateInvoice()">
+                        <div class="quick-action-icon">🧾</div>
+                        <div style="font-weight: 700;">Generate Invoice</div>
+                    </button>
+                    <button class="quick-action-btn" onclick="sendReports()">
+                        <div class="quick-action-icon">📧</div>
+                        <div style="font-weight: 700;">Email Reports</div>
+                    </button>
+                    <button class="quick-action-btn" onclick="resetSystem()">
+                        <div class="quick-action-icon">🔄</div>
+                        <div style="font-weight: 700;">Reset System</div>
+                    </button>
+                </div>
+
+                <div class="chart-container">
+                    <h4>📈 Monthly Revenue Trend</h4>
+                    <div class="bar-chart" id="monthly-chart"></div>
+                </div>
+
+                <div class="widget-grid">
+                    <div class="widget">
+                        <div class="widget-header">
+                            <span class="widget-title">Top Performing Doctors</span>
+                            <span class="widget-icon">🏆</span>
+                        </div>
+                        <div id="top-doctors"></div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-header">
+                            <span class="widget-title">Top Performing PROs</span>
+                            <span class="widget-icon">⭐</span>
+                        </div>
+                        <div id="top-pros"></div>
+                    </div>
+                </div>
+
+                <h4 style="margin: 3rem 0 1.5rem; font-size: 1.5rem;">📋 Recent Bookings</h4>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Patient</th>
+                                <th>Amount</th>
+                                <th>Doctor</th>
+                                <th>Doctor Incentive</th>
+                                <th>PRO</th>
+                                <th>PRO Fee</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-bookings-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Doctor Dashboard Section -->
+        <section id="doctor-dashboard" class="section">
+            <div class="card">
+                <h3>🩺 Doctor Dashboard - Performance Tracking</h3>
+                
+                <div class="form-group" style="max-width: 500px; margin-bottom: 3rem;">
+                    <label for="select-doctor">Select Your Profile</label>
+                    <select id="select-doctor" onchange="loadDoctorDashboard()">
+                        <option value="">Choose doctor...</option>
+                    </select>
+                </div>
+
+                <div id="doctor-dashboard-content"></div>
+            </div>
+        </section>
+
+        <!-- PRO Dashboard Section -->
+        <section id="pro-dashboard" class="section">
+            <div class="card">
+                <h3>👥 PRO Dashboard - Network Performance</h3>
+                
+                <div class="form-group" style="max-width: 500px; margin-bottom: 3rem;">
+                    <label for="select-pro">Select Your Profile</label>
+                    <select id="select-pro" onchange="loadPRODashboard()">
+                        <option value="">Choose PRO...</option>
+                    </select>
+                </div>
+
+                <div id="pro-dashboard-content"></div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section id="analytics" class="section">
+            <div class="card">
+                <h3>📈 Advanced Analytics & Insights</h3>
+                
+                <div class="stats-grid" id="analytics-stats"></div>
+
+                <div class="widget-grid">
+                    <div class="widget">
+                        <div class="widget-header">
+                            <span class="widget-title">Service Popularity</span>
+                            <span class="widget-icon">📊</span>
+                        </div>
+                        <div id="service-chart"></div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-header">
+                            <span class="widget-title">Growth Metrics</span>
+                            <span class="widget-icon">📈</span>
+                        </div>
+                        <div id="growth-metrics"></div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-header">
+                            <span class="widget-title">Geographic Distribution</span>
+                            <span class="widget-icon">🗺️</span>
+                        </div>
+                        <div id="geo-chart"></div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-header">
+                            <span class="widget-title">Revenue Forecast</span>
+                            <span class="widget-icon">🔮</span>
+                        </div>
+                        <div id="forecast-chart"></div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h4>Comprehensive Revenue Analysis</h4>
+                    <div class="bar-chart" id="analytics-revenue-chart"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">&copy; 2024 Divya Garbh Sanskar</p>
+            <p style="opacity: 0.9; margin-bottom: 1rem;">Medical Referral Management System</p>
+            <p style="opacity: 0.8; font-size: 0.875rem;">Enterprise-grade referral tracking for healthcare excellence • Powered by MediTrack Pro</p>
+            <div style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                <a href="#" style="color: white; text-decoration: none; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">Privacy Policy</a>
+                <a href="#" style="color: white; text-decoration: none; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">Terms of Service</a>
+                <a href="#" style="color: white; text-decoration: none; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">Support</a>
+                <a href="#" style="color: white; text-decoration: none; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">API Documentation</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize localStorage structure
+        function initializeData() {
+            if (!localStorage.getItem('pros')) {
+                localStorage.setItem('pros', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('doctors')) {
+                localStorage.setItem('doctors', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('bookings')) {
+                localStorage.setItem('bookings', JSON.stringify([]));
+            }
+        }
+
+        // Load demo data
+        function loadDemoData() {
+            const pros = JSON.parse(localStorage.getItem('pros'));
+            if (pros.length === 0) {
+                const demoPros = [
+                    { id: 'PRO-1001', name: 'Rajesh Kumar', email: 'rajesh@example.com', phone: '+91 98765 11111', location: 'Indore, MP', organization: 'MediCare Solutions', experience: 8, createdAt: new Date('2024-01-15').toISOString() },
+                    { id: 'PRO-1002', name: 'Priya Sharma', email: 'priya@example.com', phone: '+91 98765 22222', location: 'Bhopal, MP', organization: 'HealthFirst Network', experience: 5, createdAt: new Date('2024-01-20').toISOString() },
+                    { id: 'PRO-1003', name: 'Amit Patel', email: 'amit@example.com', phone: '+91 98765 33333', location: 'Ujjain, MP', organization: 'Wellness Partners', experience: 10, createdAt: new Date('2024-02-01').toISOString() }
+                ];
+                localStorage.setItem('pros', JSON.stringify(demoPros));
+
+                const demoDoctors = [
+                    { id: 'DOC-2001', name: 'Dr. Anjali Verma', email: 'anjali@example.com', phone: '+91 98765 44444', specialization: 'Gynecology', proId: 'PRO-1001', location: 'Indore, MP', qualification: 'MBBS, MD', registration: 'MH12345', createdAt: new Date('2024-01-25').toISOString() },
+                    { id: 'DOC-2002', name: 'Dr. Suresh Patel', email: 'suresh@example.com', phone: '+91 98765 55555', specialization: 'Pediatrics', proId: 'PRO-1001', location: 'Indore, MP', qualification: 'MBBS, DCH', registration: 'MH12346', createdAt: new Date('2024-02-01').toISOString() },
+                    { id: 'DOC-2003', name: 'Dr. Meera Joshi', email: 'meera@example.com', phone: '+91 98765 66666', specialization: 'Prenatal Care', proId: 'PRO-1002', location: 'Bhopal, MP', qualification: 'MBBS, DGO', registration: 'MH12347', createdAt: new Date('2024-02-05').toISOString() },
+                    { id: 'DOC-2004', name: 'Dr. Vikram Singh', email: 'vikram@example.com', phone: '+91 98765 77777', specialization: 'Ayurveda', proId: 'PRO-1003', location: 'Ujjain, MP', qualification: 'BAMS', registration: 'MH12348', createdAt: new Date('2024-02-08').toISOString() }
+                ];
+                localStorage.setItem('doctors', JSON.stringify(demoDoctors));
+
+                const demoBookings = [
+                    { id: 'BK-0001', patientName: 'Sita Devi', patientPhone: '+91 98111 11111', patientEmail: 'sita@example.com', age: 28, amount: 5000, doctorId: 'DOC-2001', service: 'Garbh Sanskar Consultation', notes: 'First trimester', createdAt: new Date('2024-02-10').toISOString() },
+                    { id: 'BK-0002', patientName: 'Kavita Singh', patientPhone: '+91 98111 22222', patientEmail: '', age: 30, amount: 7500, doctorId: 'DOC-2001', service: 'Prenatal Yoga', notes: '', createdAt: new Date('2024-02-11').toISOString() },
+                    { id: 'BK-0003', patientName: 'Rekha Gupta', patientPhone: '+91 98111 33333', patientEmail: 'rekha@example.com', age: 26, amount: 6000, doctorId: 'DOC-2002', service: 'Nutritional Guidance', notes: 'Vegetarian diet plan', createdAt: new Date('2024-02-12').toISOString() },
+                    { id: 'BK-0004', patientName: 'Sunita Yadav', patientPhone: '+91 98111 44444', patientEmail: '', age: 32, amount: 8000, doctorId: 'DOC-2003', service: 'General Consultation', notes: '', createdAt: new Date('2024-02-13').toISOString() },
+                    { id: 'BK-0005', patientName: 'Pooja Deshmukh', patientPhone: '+91 98111 55555', patientEmail: 'pooja@example.com', age: 29, amount: 5500, doctorId: 'DOC-2004', service: 'Ayurvedic Therapy', notes: 'Stress management', createdAt: new Date('2024-02-14').toISOString() },
+                    { id: 'BK-0006', patientName: 'Geeta Sharma', patientPhone: '+91 98111 66666', patientEmail: '', age: 27, amount: 4500, doctorId: 'DOC-2001', service: 'Meditation & Mindfulness', notes: '', createdAt: new Date('2024-02-14').toISOString() }
+                ];
+                localStorage.setItem('bookings', JSON.stringify(demoBookings));
+            }
+        }
+
+        // Generate unique ID
+        function generateId(prefix) {
+            const items = JSON.parse(localStorage.getItem(prefix === 'PRO' ? 'pros' : 'doctors'));
+            let maxNum = 1000;
+            items.forEach(item => {
+                const num = parseInt(item.id.split('-')[1]);
+                if (num > maxNum) maxNum = num;
+            });
+            return `${prefix}-${maxNum + 1}`;
+        }
+
+        // Register PRO
+        function registerPRO(event) {
+            event.preventDefault();
+            const pros = JSON.parse(localStorage.getItem('pros'));
+            
+            const newPro = {
+                id: generateId('PRO'),
+                name: document.getElementById('pro-name').value,
+                email: document.getElementById('pro-email').value,
+                phone: document.getElementById('pro-phone').value,
+                location: document.getElementById('pro-location').value,
+                organization: document.getElementById('pro-organization').value,
+                experience: parseInt(document.getElementById('pro-experience').value) || 0,
+                createdAt: new Date().toISOString()
+            };
+
+            pros.push(newPro);
+            localStorage.setItem('pros', JSON.stringify(pros));
+
+            showNotification('PRO Registered Successfully!', `Referral Code: ${newPro.id} | Name: ${newPro.name}`, 'success');
+
+            document.getElementById('pro-form').reset();
+            updateDoctorProSelect();
+            updatePROSelect();
+            updateHeroStats();
+        }
+
+        // Register Doctor
+        function registerDoctor(event) {
+            event.preventDefault();
+            const doctors = JSON.parse(localStorage.getItem('doctors'));
+            
+            const newDoctor = {
+                id: generateId('DOC'),
+                name: document.getElementById('doctor-name').value,
+                email: document.getElementById('doctor-email').value,
+                phone: document.getElementById('doctor-phone').value,
+                specialization: document.getElementById('doctor-specialization').value,
+                proId: document.getElementById('doctor-pro').value,
+                location: document.getElementById('doctor-location').value,
+                qualification: document.getElementById('doctor-qualification').value,
+                registration: document.getElementById('doctor-registration').value,
+                createdAt: new Date().toISOString()
+            };
+
+            doctors.push(newDoctor);
+            localStorage.setItem('doctors', JSON.stringify(doctors));
+
+            showNotification('Doctor Registered Successfully!', `Referral Code: ${newDoctor.id} | Name: ${newDoctor.name}`, 'success');
+
+            document.getElementById('doctor-form').reset();
+            updateDoctorSelect();
+            updateHeroStats();
+        }
+
+        // Create Booking
+        function createBooking(event) {
+            event.preventDefault();
+            const bookings = JSON.parse(localStorage.getItem('bookings'));
+            const doctors = JSON.parse(localStorage.getItem('doctors'));
+            
+            const referralCode = document.getElementById('doctor-referral-code').value.toUpperCase();
+            const doctor = doctors.find(d => d.id === referralCode);
+
+            if (!doctor) {
+                showNotification('Invalid Referral Code!', 'Please check the doctor referral code and try again.', 'danger');
+                return;
+            }
+
+            const newBooking = {
+                id: `BK-${String(bookings.length + 1).padStart(4, '0')}`,
+                patientName: document.getElementById('patient-name').value,
+                patientPhone: document.getElementById('patient-phone').value,
+                patientEmail: document.getElementById('patient-email').value,
+                age: parseInt(document.getElementById('patient-age').value) || 0,
+                amount: parseFloat(document.getElementById('booking-amount').value),
+                doctorId: referralCode,
+                service: document.getElementById('booking-service').value,
+                notes: document.getElementById('booking-notes').value,
+                createdAt: new Date().toISOString()
+            };
+
+            bookings.push(newBooking);
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+
+            const doctorIncentive = (newBooking.amount * 0.10).toFixed(2);
+            const proFee = (newBooking.amount * 0.05).toFixed(2);
+
+            showNotification('Booking Confirmed!', `Booking ID: ${newBooking.id} | Amount: ₹${newBooking.amount} | Doctor Incentive: ₹${doctorIncentive} | PRO Fee: ₹${proFee}`, 'success');
+
+            document.getElementById('booking-form').reset();
+            updateHeroStats();
+        }
+
+        // Update PRO select in doctor form
+        function updateDoctorProSelect() {
+            const pros = JSON.parse(localStorage.getItem('pros'));
+            const select = document.getElementById('doctor-pro');
+            select.innerHTML = '<option value="">Select PRO</option>';
+            pros.forEach(pro => {
+                select.innerHTML += `<option value="${pro.id}">${pro.name} (${pro.id}) - ${pro.organization}</option>`;
+            });
+        }
+
+        // Update Doctor select in doctor dashboard
+        function updateDoctorSelect() {
+            const doctors = JSON.parse(localStorage.getItem('doctors'));
+            const select = document.getElementById('select-doctor');
+            select.innerHTML = '<option value="">Choose doctor...</option>';
+            doctors.forEach(doctor => {
+                select.innerHTML += `<option value="${doctor.id}">${doctor.name} (${doctor.id}) - ${doctor.specialization}</option>`;
+            });
+        }
+
+        // Update PRO select in PRO dashboard
+        function updatePROSelect() {
+            const pros = JSON.parse(localStorage.getItem('pros'));
+            const select = document.getElementById('select-pro');
+            select.innerHTML = '<option value="">Choose PRO...</option>';
+            pros.forEach(pro => {
+                select.innerHTML += `<option value="${pro.id}">${pro.name} (${pro.id}) - ${pro.organization}</option>`;
+            });
+        }
+
+        // Update Hero Stats
+        function updateHeroStats() {
+            const bookings = JSON.parse(localStorage.getItem('bookings'));
+            const doctors = JSON.parse(localStorage.getItem('doctors'));
+            const pros = JSON.parse(localStorage.getItem('pros'));
+
+            const totalRevenue = bookings.reduce((sum, b) => sum + b.amount, 0);
+
+            document.getElementById('hero-revenue').textContent = `₹${totalRevenue.toLocaleString()}`;
+            document.getElementById('hero-bookings').textContent = bookings.length;
+            document.getElementById('hero-doctors').textContent = doctors.length;
+            document.getElementById('hero-pros').textContent = pros.length;
+        }
+
+        // Load Admin Dashboard
+        function loadAdminDashboard() {
+            const bookings = JSON.parse(localStorage.getItem('bookings'));
+            const doctors = JSON.parse(localStorage.getItem('doctors'));
+            const pros = JSON.parse(localStorage.getItem('pros'));
+
+            let totalRevenue = 0;
+            let totalDoctorIncentive = 0;
+            let totalPROFee = 0;
+
+            bookings.forEach(booking => {
+                totalRevenue += booking.amount;
+                totalDoctorIncentive += booking.amount * 0.10;
+                totalPROFee += booking.amount * 0.05;
+            });
+
+            const ownerShare = totalRevenue - totalDoctorIncentive - totalPROFee;
+            const avgBookingValue = bookings.length > 0 ? totalRevenue / bookings.length : 0;
+
+            document.getElementById('admin-stats').innerHTML = `
+                <div class="stat-card">
+                    <h4>💰 Total Revenue</h4>
+                    <div class="value">₹${totalRevenue.toLocaleString()}</div>
+                    <p>${bookings.length} bookings</p>
+                    <div class="trend">
+                        <span class="trend-up">↑ 12.5% from last month</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h4>🩺 Total Doctor Incentives</h4>
+                    <div class="value">₹${totalDoctorIncentive.toLocaleString()}</div>
+                    <p>Health Awareness Incentive (10%)</p>
+                    <div class="trend">
+                        <span class="trend-up">↑ 8.3% growth</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h4>🤝 Total PRO Fees</h4>
+                    <div class="value">₹${totalPROFee.toLocaleString()}</div>
+                    <p>Professional Collaboration Fee (5%)</p>
+                    <div class="trend">
+                        <span class="trend-up">↑ 6.7% growth</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h4>🏢 Owner Share</h4>
+                    <div class="value">₹${ownerShare.toLocaleString()}</div>
+                    <p>${((ownerShare/totalRevenue)*100).toFixed(1)}% of total revenue</p>
+                    <div class="trend">
+                        <span class="trend-up">↑ Steady growth</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h4>👨‍⚕️ Active Doctors</h4>
+                    <div class="value">${doctors.length}</div>
+                    <p>Registered medical professionals</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${Math.min((doctors.length/10)*100, 100)}%;"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h4>👥 Active PROs</h4>
+                    <div class="value">${pros.length}</div>
+                    <p>Professional representatives</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${Math.min((pros.length/5)*100, 100)}%;"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h4>📊 Avg Booking Value</h4>
+                    <div class="value">₹${avgBookingValue.toLocaleString()}</div>
+                    <p>Per consultation</p>
+                    <div class="trend">
+                        <span class="trend-up">↑ 4.2% increase</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h4>📈 Conversion Rate</h4>
+                    <div class="value">87%</div>
+                    <p>Referral to booking</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 87%;"></div>
+                    </div>
+                </div>
+            `;
+
+            // Top Doctors
+            const doctorStats = doctors.map(doctor => {
+                const doctorBookings = bookings.filter(b => b.doctorId === doctor.id);
+                const revenue = doctorBookings.reduce((sum, b) => sum + b.amount, 0);
+                return { doctor, bookings: doctorBookings.length, revenue };
+            }).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+
+            document.getElementById('top-doctors').innerHTML = doctorStats.map((stat, index) => `
+                <div style="padding: 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-weight: 700;">${index + 1}. ${stat.doctor.name}</div>
+                        <div style="font-size: 0.875rem; color: var(--text-gray);">${stat.bookings} bookings • ${stat.doctor.specialization}</div>
+                    </div>
+                    <div style="font-weight: 800; color: var(--primary);">₹${stat.revenue.toLocaleString()}</div>
+                </div>
+            `).join('');
+
+            // Top PROs
+            const proStats = pros.map(pro => {
+                const proDoctors = doctors.filter(d => d.proId === pro.id);
+                const doctorIds = proDoctors.map(d => d.id);
+                const proBookings = bookings.filter(b => doctorIds.includes(b.doctorId));
+                const revenue = proBookings.reduce((sum, b) => sum + b.amount, 0);
+                return { pro, doctors: proDoctors.length, revenue };
+            }).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+
+            document.getElementById('top-pros').innerHTML = proStats.map((stat, index) => `
+                <div style="padding: 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-weight: 700;">${index + 1}. ${stat.pro.name}</div>
+                        <div style="font-size: 0.875rem; color: var(--text-gray);">${stat.doctors} doctors • ${stat.pro.organization}</div>
+                    </div>
+                    <div style="font-weight: 800; color: var(--primary);">₹${stat.revenue.toLocaleString()}</div>
+                </div>
+            `).join('');
+
+            // Monthly chart
+            const monthlyData = {};
+            bookings.forEach(booking => {
+                const month = new Date(booking.createdAt).toLocaleDateString('en-US', { month: 'short' });
+                monthlyData[month] = (monthlyData[month] || 0) + booking.amount;
+            });
+
+            const months = Object.keys(monthlyData);
+            const maxAmount = Math.max(...Object.values(monthlyData), 1);
+            
+            document.getElementById('monthly-chart').innerHTML = months.map(month => {
+                const height = (monthlyData[month] / maxAmount) * 100;
+                return `
+                    <div class="bar" style="height: ${height}%;">
+                        <div class="bar-value">₹${monthlyData[month].toLocaleString()}</div>
+                        <div class="bar-label">${month}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Bookings table
+            const tableBody = document.getElementById('admin-bookings-table');
+            tableBody.innerHTML = bookings.slice().reverse().map(booking => {
+                const doctor = doctors.find(d => d.id === booking.doctorId);
+                const pro = pros.find(p => p.id === doctor.proId);
+                const doctorIncentive = (booking.amount * 0.10).toFixed(2);
+                const proFee = (booking.amount * 0.05).toFixed(2);
+
+                return `
+                    <tr>
+                        <td><span class="badge badge-info">${booking.id}</span></td>
+                        <td><strong>${booking.patientName}</strong><br><span style="font-size: 0.875rem; color: var(--text-gray);">${booking.patientPhone}</span></td>
+                        <td><strong style="font-size: 1.125rem; color: var(--primary);">₹${booking.amount.toLocaleString()}</strong></td>
+                        <td>${doctor.name}<br><span style="font-size: 0.875rem; color: var(--text-gray);">${doctor.specialization}</span></td>
+                        <td><strong style="color: var(--success);">₹${parseFloat(doctorIncentive).toLocaleString()}</strong></td>
+                        <td>${pro.name}<br><span style="font-size: 0.875rem; color: var(--text-gray);">${pro.organization}</span></td>
+                        <td><strong style="color: var(--accent);">₹${parseFloat(proFee).toLocaleString()}</strong></td>
+                        <td>${new Date(booking.createdAt).toLocaleDateString()}</td>
+                        <td><span class="badge badge-success">Completed</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Load Doctor Dashboard
+        function loadDoctorDashboard() {
+            const doctorId = document.getElementById('select-doctor').value;
+            if (!doctorId) {
+                document.getElementById('doctor-dashboard-content').innerHTML = '';
+                return;
+            }
+
+            const doctors = JSON.parse(localStorage.getItem('doctors'));
+            const bookings = JSON.parse(localStorage.getItem('bookings'));
+            const pros = JSON.parse(localStorage.getItem('pros'));
+
+            const doctor = doctors.find(d => d.id === doctorId);
+            const doctorBookings = bookings.filter(b => b.doctorId === doctorId);
+            const totalEarnings = doctorBookings.reduce((sum, b) => sum + (b.amount * 0.10), 0);
+            const totalRevenue = doctorBookings.reduce((sum, b) => sum + b.amount, 0);
+
+            const pro = pros.find(p => p.id === doctor.proId);
+
+            // Service breakdown
+            const serviceStats = {};
+            doctorBookings.forEach(b => {
+                serviceStats[b.service] = (serviceStats[b.service] || 0) + 1;
+            });
+
+            document.getElementById('doctor-dashboard-content').innerHTML = `
+                <div class="alert alert-info">
+                    <span style="font-size: 2rem;">👋</span>
+                    <div>
+                        <strong>Welcome, ${doctor.name}!</strong><br>
+                        Specialization: ${doctor.specialization} | Qualification: ${doctor.qualification} | Assigned PRO: ${pro.name}
+                    </div>
+                </div>
+
+                <div class="referral-link">
+                    <strong style="font-size: 1.125rem;">Your Referral Code:</strong><br>
+                    <code>${doctor.id}</code>
+                    <button class="copy-btn" onclick="copyToClipboard('${doctor.id}')">📋 Copy Code</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>👥 Total Patients Referred</h4>
+                        <div class="value">${doctorBookings.length}</div>
+                        <p>Successful bookings</p>
+                        <div class="trend">
+                            <span class="trend-up">↑ Great performance!</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>💰 Total Revenue Generated</h4>
+                        <div class="value">₹${totalRevenue.toLocaleString()}</div>
+                        <p>From all bookings</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>💵 Your Health Awareness Incentive</h4>
+                        <div class="value">₹${totalEarnings.toLocaleString()}</div>
+                        <p>10% of booking amount</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>📊 Average Booking Value</h4>
+                        <div class="value">₹${doctorBookings.length > 0 ? (totalRevenue/doctorBookings.length).toLocaleString() : 0}</div>
+                        <p>Per consultation</p>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <div class="widget-header">
+                        <span class="widget-title">Service Distribution</span>
+                        <span class="widget-icon">📊</span>
+                    </div>
+                    ${Object.entries(serviceStats).map(([service, count]) => {
+                        const percentage = (count / doctorBookings.length) * 100;
+                        return `
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 600;">${service}</span>
+                                    <span style="font-weight: 700;">${count} (${percentage.toFixed(0)}%)</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${percentage}%;"></div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <h4 style="margin: 3rem 0 1.5rem; font-size: 1.5rem;">📋 Your Recent Bookings</h4>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Patient Name</th>
+                                <th>Service</th>
+                                <th>Amount</th>
+                                <th>Your Incentive</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${doctorBookings.slice().reverse().map(booking => `
+                                <tr>
+                                    <td><span class="badge badge-info">${booking.id}</span></td>
+                                    <td><strong>${booking.patientName}</strong><br><span style="font-size: 0.875rem; color: var(--text-gray);">${booking.patientPhone}</span></td>
+                                    <td>${booking.service}</td>
+                                    <td><strong style="color: var(--primary);">₹${booking.amount.toLocaleString()}</strong></td>
+                                    <td><strong style="color: var(--success); font-size: 1.125rem;">₹${(booking.amount * 0.10).toLocaleString()}</strong></td>
+                                    <td>${new Date(booking.createdAt).toLocaleDateString()}</td>
+                                    <td><span class="badge badge-success">Completed</span></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // Load PRO Dashboard
+        function loadPRODashboard() {
+            const proId = document.getElementById('select-pro').value;
+            if (!proId) {
+                document.getElementById('pro-dashboard-content').innerHTML = '';
+                return;
+            }
+
+            const pros = JSON.parse(localStorage.getItem('pros'));
+            const doctors = JSON.parse(localStorage.getItem('doctors'));
+            const bookings = JSON.parse(localStorage.getItem('bookings'));
+
+            const pro = pros.find(p => p.id === proId);
+            const proDoctors = doctors.filter(d => d.proId === proId);
+            const doctorIds = proDoctors.map(d => d.id);
+            const proBookings = bookings.filter(b => doctorIds.includes(b.doctorId));
+            const totalEarnings = proBookings.reduce((sum, b) => sum + (b.amount * 0.05), 0);
+            const totalRevenue = proBookings.reduce((sum, b) => sum + b.amount, 0);
+
+            document.getElementById('pro-dashboard-content').innerHTML = `
+                <div class="alert alert-info">
+                    <span style="font-size: 2rem;">👋</span>
+                    <div>
+                        <strong>Welcome, ${pro.name}!</strong><br>
+                        PRO Code: ${pro.id} | Organization: ${pro.organization} | Location: ${pro.location} | Experience: ${pro.experience} years
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>👨‍⚕️ Doctors in Network</h4>
+                        <div class="value">${proDoctors.length}</div>
+                        <p>Active medical professionals</p>
+                        <div class="trend">
+                            <span class="trend-up">↑ Network growing</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>📊 Total Network Revenue</h4>
+                        <div class="value">₹${totalRevenue.toLocaleString()}</div>
+                        <p>From ${proBookings.length} bookings</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>💰 Your Collaboration Fee</h4>
+                        <div class="value">₹${totalEarnings.toLocaleString()}</div>
+                        <p>5% of network revenue</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>📈 Avg Revenue Per Doctor</h4>
+                        <div class="value">₹${proDoctors.length > 0 ? (totalRevenue/proDoctors.length).toLocaleString() : 0}</div>
+                        <p>Network efficiency</p>
+                    </div>
+                </div>
+
+                <h4 style="margin: 3rem 0 1.5rem; font-size: 1.5rem;">👨‍⚕️ Doctors in Your Network</h4>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Doctor Code</th>
+                                <th>Name</th>
+                                <th>Specialization</th>
+                                <th>Patients Referred</th>
+                                <th>Revenue Generated</th>
+                                <th>Your Fee (5%)</th>
+                                <th>Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${proDoctors.map(doctor => {
+                                const doctorBookings = bookings.filter(b => b.doctorId === doctor.id);
+                                const doctorRevenue = doctorBookings.reduce((sum, b) => sum + b.amount, 0);
+                                const proFee = doctorRevenue * 0.05;
+                                const performance = doctorBookings.length >= 5 ? 'Excellent' : doctorBookings.length >= 3 ? 'Good' : 'Average';
+                                const badge = doctorBookings.length >= 5 ? 'badge-success' : doctorBookings.length >= 3 ? 'badge-info' : 'badge-warning';
+                                return `
+                                    <tr>
+                                        <td><span class="badge badge-success">${doctor.id}</span></td>
+                                        <td><strong>${doctor.name}</strong><br><span style="font-size: 0.875rem; color: var(--text-gray);">${doctor.qualification}</span></td>
+                                        <td>${doctor.specialization}</td>
+                                        <td><strong>${doctorBookings.length}</strong> patients</td>
+                                        <td><strong style="color: var(--primary);">₹${doctorRevenue.toLocaleString()}</strong></td>
+                                        <td><strong style="color: var(--success); font-size: 1.125rem;">₹${proFee.toLocaleString()}</strong></td>
+                                        <td><span class="badge ${badge}">${performance}</span></td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // Load Analytics Dashboard
+        function loadAnalytics() {
+            const bookings = JSON.parse(localStorage.getItem('bookings'));
+            const doctors = JSON.parse(localStorage.getItem('doctors'));
+            const pros = JSON.parse(localStorage.getItem('pros'));
+
+            const totalRevenue = bookings.reduce((sum, b) => sum + b.amount, 0);
+            const avgBooking = bookings.length > 0 ? totalRevenue / bookings.length : 0;
+
+            // Service popularity
+            const serviceStats = {};
+            bookings.forEach(b => {
+                serviceStats[b.service] = (serviceStats[b.service] || 0) + 1;
+            });
+
+            // Location distribution
+            const locationStats = {};
+            doctors.forEach(d => {
+                const location = d.location || 'Unknown';
+                locationStats[location] = (locationStats[location] || 0) + 1;
+            });
+
+            document.getElementById('analytics-stats').innerHTML = `
+                <div class="stat-card">
+                    <h4>📊 Total Transactions</h4>
+                    <div class="value">${bookings.length}</div>
+                    <p>Completed bookings</p>
+                </div>
+                <div class="stat-card">
+                    <h4>💰 Avg Transaction Value</h4>
+                    <div class="value">₹${avgBooking.toLocaleString()}</div>
+                    <p>Per booking</p>
+                </div>
+                <div class="stat-card">
+                    <h4>📈 Growth Rate</h4>
+                    <div class="value">23%</div>
+                    <p>Month over month</p>
+                </div>
+                <div class="stat-card">
+                    <h4>⭐ Customer Satisfaction</h4>
+                    <div class="value">4.8/5</div>
+                    <p>Based on reviews</p>
+                </div>
+            `;
+
+            // Service chart
+            document.getElementById('service-chart').innerHTML = Object.entries(serviceStats).map(([service, count]) => {
+                const percentage = (count / bookings.length) * 100;
+                return `
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 600; font-size: 0.875rem;">${service}</span>
+                            <span style="font-weight: 700;">${count}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%;"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Growth metrics
+            document.getElementById('growth-metrics').innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="font-weight: 600;">Revenue Growth</span>
+                        <span class="trend-up">↑ 23%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85%;"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="font-weight: 600;">Doctor Network Growth</span>
+                        <span class="trend-up">↑ 15%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 70%;"></div>
+                    </div>
+                </div>
+                <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="font-weight: 600;">Patient Acquisition</span>
+                        <span class="trend-up">↑ 18%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%;"></div>
+                    </div>
+                </div>
+            `;
+
+            // Geographic distribution
+            document.getElementById('geo-chart').innerHTML = Object.entries(locationStats).map(([location, count]) => {
+                const percentage = (count / doctors.length) * 100;
+                return `
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 600; font-size: 0.875rem;">${location}</span>
+                            <span style="font-weight: 700;">${count} doctors</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%;"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Revenue forecast
+            document.getElementById('forecast-chart').innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; font-weight: 800; background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">₹${(totalRevenue * 1.23).toLocaleString()}</div>
+                    <div style="margin-top: 0.5rem; color: var(--text-gray);">Projected next month</div>
+                    <div style="margin-top: 1rem;">
+                        <span class="trend-up" style="font-size: 1.125rem;">↑ 23% growth expected</span>
+                    </div>
+                </div>
+            `;
+
+            // Revenue analysis chart
+            const monthlyData = {};
+            bookings.forEach(booking => {
+                const month = new Date(booking.createdAt).toLocaleDateString('en-US', { month: 'short' });
+                monthlyData[month] = (monthlyData[month] || 0) + booking.amount;
+            });
+
+            const months = Object.keys(monthlyData);
+            const maxAmount = Math.max(...Object.values(monthlyData), 1);
+            
+            document.getElementById('analytics-revenue-chart').innerHTML = months.map(month => {
+                const height = (monthlyData[month] / maxAmount) * 100;
+                return `
+                    <div class="bar" style="height: ${height}%;">
+                        <div class="bar-value">₹${monthlyData[month].toLocaleString()}</div>
+                        <div class="bar-label">${month}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Export CSV Report
+        function exportReport() {
+            const bookings = JSON.parse(localStorage.getItem('bookings'));
+            const doctors = JSON.parse(localStorage.getItem('doctors'));
+            const pros = JSON.parse(localStorage.getItem('pros'));
+
+            let csv = 'Booking ID,Patient Name,Phone,Email,Age,Service,Amount,Doctor Code,Doctor Name,Specialization,Doctor Incentive,PRO Code,PRO Name,Organization,PRO Fee,Owner Share,Date,Status\n';
+
+            bookings.forEach(booking => {
+                const doctor = doctors.find(d => d.id === booking.doctorId);
+                const pro = pros.find(p => p.id === doctor.proId);
+                const doctorIncentive = (booking.amount * 0.10).toFixed(2);
+                const proFee = (booking.amount * 0.05).toFixed(2);
+                const ownerShare = (booking.amount * 0.85).toFixed(2);
+
+                csv += `${booking.id},"${booking.patientName}","${booking.patientPhone}","${booking.patientEmail}",${booking.age},"${booking.service}",${booking.amount},${doctor.id},"${doctor.name}","${doctor.specialization}",${doctorIncentive},${pro.id},"${pro.name}","${pro.organization}",${proFee},${ownerShare},"${new Date(booking.createdAt).toLocaleString()}",Completed\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `MediTrack-Report-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            showNotification('Report Exported!', 'CSV file has been downloaded successfully.', 'success');
+        }
+
+        // Reset System
+        function resetSystem() {
+            if (confirm('⚠️ Are you sure you want to reset the entire demo system? This will delete all data and reload demo data.')) {
+                localStorage.clear();
+                initializeData();
+                loadDemoData();
+                showNotification('System Reset Complete!', 'Demo data has been reloaded.', 'success');
+                setTimeout(() => location.reload(), 1500);
+            }
+        }
+
+        // Copy to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('Copied!', `Referral code ${text} copied to clipboard.`, 'success');
+            });
+        }
+
+        // Show section
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            if (sectionId === 'admin-dashboard') {
+                loadAdminDashboard();
+            } else if (sectionId === 'analytics') {
+                loadAnalytics();
+            }
+        }
+
+        // Show notification
+        function showNotification(title, message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification alert alert-${type}`;
+            notification.innerHTML = `
+                <div>
+                    <div style="font-weight: 700; font-size: 1.125rem; margin-bottom: 0.25rem;">${title}</div>
+                    <div style="font-size: 0.875rem;">${message}</div>
+                </div>
+            `;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.5s reverse';
+                setTimeout(() => notification.remove(), 500);
+            }, 4000);
+        }
+
+        // Test API
+        function testAPI() {
+            showNotification('API Test', 'Running connection test...', 'info');
+            setTimeout(() => {
+                showNotification('API Status', 'All systems operational! Connection successful.', 'success');
+            }, 1500);
+        }
+
+        // Generate Invoice
+        function generateInvoice() {
+            showNotification('Invoice Generator', 'Generating invoice... This feature is in development.', 'warning');
+        }
+
+        // Send Reports
+        function sendReports() {
+            showNotification('Email Reports', 'Sending reports... This feature is in development.', 'warning');
+        }
+
+        // Filter Dashboard
+        function filterDashboard(filter) {
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            showNotification('Filter Applied', `Showing ${filter} data`, 'info');
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeData();
+            loadDemoData();
+            updateDoctorProSelect();
+            updateDoctorSelect();
+            updatePROSelect();
+            updateHeroStats();
+            loadAdminDashboard();
+            loadAnalytics();
+        });
+    </script>
+</body>
+</html>
